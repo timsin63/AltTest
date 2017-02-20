@@ -20,6 +20,7 @@ public class NoteDaoGenerator {
         item.addIdProperty().autoincrement();
         item.addStringProperty("title");
         item.addStringProperty("content");
+        item.addIntProperty("importance");
 
         try {
             new DaoGenerator().generateAll(schema, "./app/src/main/java");

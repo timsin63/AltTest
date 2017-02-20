@@ -15,4 +15,12 @@
     <string name="update">Update</string>
     <string name="cancel">Cancel</string>
     <string name="enter_title">Please, enter the title</string>
+    <string name="exported">Note exported! See "Documents" folder</string>
+    <string name="importance">Importance:</string>
+    <string-array name="importance_list">
+        <item>Unknown</item>
+        <item>Low</item>
+        <item>Medium</item>
+        <item>High</item>
+    </string-array>
 </resources>

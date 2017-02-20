@@ -8,16 +8,20 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.timofey.myapplication.database.Note;
 import com.example.timofey.myapplication.database.NoteDao;
+
+import org.greenrobot.greendao.DaoException;
 
 public class NoteEditActivity extends AppCompatActivity {
 
     NoteDao noteDao;
     EditText editTitle;
     EditText editContent;
+    Spinner spinner;
     Note note;
 
     @Override
@@ -31,6 +35,7 @@ public class NoteEditActivity extends AppCompatActivity {
         editContent = (EditText) findViewById(R.id.edit_content);
         Button btnCancel = (Button) findViewById(R.id.note_edit_cancel);
         Button btnOk = (Button) findViewById(R.id.note_edit_ok);
+        spinner = (Spinner) findViewById(R.id.importance_spinner);
 
         noteDao = NoteListFragment.noteDao;
 
@@ -54,6 +59,9 @@ public class NoteEditActivity extends AppCompatActivity {
                     finish();
                 }
             });
+            try {
+                spinner.setSelection(note.getImportance());
+            } catch (Exception e){}
         }
 
         btnCancel.setOnClickListener(new View.OnClickListener() {
@@ -75,6 +83,7 @@ public class NoteEditActivity extends AppCompatActivity {
         }
         newNote.setTitle(title);
         newNote.setContent(content);
+        newNote.setImportance(spinner.getSelectedItemPosition());
         noteDao.insert(newNote);
 
         finish();
@@ -91,6 +100,12 @@ public class NoteEditActivity extends AppCompatActivity {
         }
         note.setTitle(title);
         note.setContent(content);
-        noteDao.update(note);
+        note.setImportance(spinner.getSelectedItemPosition());
+
+        try {
+            noteDao.update(note);
+        } catch (DaoException e){
+            noteDao.insert(note);
+        }
     }
 }

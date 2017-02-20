@@ -69,6 +69,12 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteLi
                 infoDialog.show(((Activity) context).getFragmentManager(), NoteInfoDialog.TAG);
             }
         });
+
+        try {
+            holder.itemTitle.setBackgroundColor(context.getResources()
+                    .getColor(NoteColors.getColor(list.get(position).getImportance())));
+        } catch (NullPointerException e){}
+
     }
 
     BroadcastReceiver onItemDeleteReceiver = new BroadcastReceiver() {
