@@ -26,6 +26,7 @@ public class NoteDao extends AbstractDao<Note, Long> {
         public final static Property Title = new Property(1, String.class, "title", false, "TITLE");
         public final static Property Content = new Property(2, String.class, "content", false, "CONTENT");
         public final static Property Importance = new Property(3, Integer.class, "importance", false, "IMPORTANCE");
+        public final static Property PhotoPath = new Property(4, String.class, "photoPath", false, "PHOTO_PATH");
     }
 
 
@@ -44,7 +45,8 @@ public class NoteDao extends AbstractDao<Note, Long> {
                 "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: id
                 "\"TITLE\" TEXT," + // 1: title
                 "\"CONTENT\" TEXT," + // 2: content
-                "\"IMPORTANCE\" INTEGER);"); // 3: importance
+                "\"IMPORTANCE\" INTEGER," + // 3: importance
+                "\"PHOTO_PATH\" TEXT);"); // 4: photoPath
     }
 
     /** Drops the underlying database table. */
@@ -76,6 +78,11 @@ public class NoteDao extends AbstractDao<Note, Long> {
         if (importance != null) {
             stmt.bindLong(4, importance);
         }
+ 
+        String photoPath = entity.getPhotoPath();
+        if (photoPath != null) {
+            stmt.bindString(5, photoPath);
+        }
     }
 
     @Override
@@ -101,6 +108,11 @@ public class NoteDao extends AbstractDao<Note, Long> {
         if (importance != null) {
             stmt.bindLong(4, importance);
         }
+ 
+        String photoPath = entity.getPhotoPath();
+        if (photoPath != null) {
+            stmt.bindString(5, photoPath);
+        }
     }
 
     @Override
@@ -114,7 +126,8 @@ public class NoteDao extends AbstractDao<Note, Long> {
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // title
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // content
-            cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3) // importance
+            cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3), // importance
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4) // photoPath
         );
         return entity;
     }
@@ -125,6 +138,7 @@ public class NoteDao extends AbstractDao<Note, Long> {
         entity.setTitle(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
         entity.setContent(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setImportance(cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3));
+        entity.setPhotoPath(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
      }
     
     @Override

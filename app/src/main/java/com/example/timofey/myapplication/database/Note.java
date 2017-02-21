@@ -10,7 +10,7 @@ import java.io.Serializable;
  * Entity mapped to table "NOTE".
  */
 @Entity
-public class Note implements Serializable {
+public class Note implements Serializable{
 
     public static final String TAG = "NOTE_ITEM";
 
@@ -19,6 +19,7 @@ public class Note implements Serializable {
     private String title;
     private String content;
     private Integer importance;
+    private String photoPath;
 
     @Generated
     public Note() {
@@ -29,11 +30,12 @@ public class Note implements Serializable {
     }
 
     @Generated
-    public Note(Long id, String title, String content, Integer importance) {
+    public Note(Long id, String title, String content, Integer importance, String photoPath) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.importance = importance;
+        this.photoPath = photoPath;
     }
 
     public Long getId() {
@@ -66,6 +68,14 @@ public class Note implements Serializable {
 
     public void setImportance(Integer importance) {
         this.importance = importance;
+    }
+
+    public String getPhotoPath() {
+        return photoPath;
+    }
+
+    public void setPhotoPath(String photoPath) {
+        this.photoPath = photoPath;
     }
 
 }

@@ -21,6 +21,7 @@ public class NoteDaoGenerator {
         item.addStringProperty("title");
         item.addStringProperty("content");
         item.addIntProperty("importance");
+        item.addStringProperty("photoPath");
 
         try {
             new DaoGenerator().generateAll(schema, "./app/src/main/java");

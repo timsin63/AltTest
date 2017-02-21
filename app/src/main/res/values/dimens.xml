@@ -6,4 +6,5 @@
     <dimen name="title_text_size">28sp</dimen>
     <dimen name="content_text_size">25sp</dimen>
     <dimen name="control_icons_size">60dp</dimen>
+    <dimen name="image_preview_size">100dp</dimen>
 </resources>

@@ -23,4 +23,6 @@
         <item>Medium</item>
         <item>High</item>
     </string-array>
+    <string name="photo">Photo:</string>
+    <string name="delete_photo">Delete photo</string>
 </resources>

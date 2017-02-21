@@ -8,6 +8,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 
@@ -16,11 +18,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.timofey.myapplication.database.DaoSession;
 import com.example.timofey.myapplication.database.Note;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
 
 import static com.example.timofey.myapplication.NoteListFragment.noteDao;
@@ -33,6 +39,7 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteLi
 
     public static final String EXTRA_POSITION = "EXTRA_POSITION";
     public static final String INTENT_FILTER = "ACTION_DELETE";
+    public static final String TAG = "NOTE_LIST_ADAPTER";
 
     ArrayList<Note> list;
     Context context;
@@ -58,6 +65,15 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteLi
 
         holder.itemTitle.setText(list.get(position).getTitle());
 
+        try {
+            Picasso.with(context).load(new File(list.get(position).getPhotoPath()))
+                    .resize(120, 120)
+                    .into(holder.imagePreview);
+        } catch (Exception e){
+            Log.e(TAG, e.getLocalizedMessage());
+        }
+
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,6 +88,8 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteLi
 
         try {
             holder.itemTitle.setBackgroundColor(context.getResources()
+                    .getColor(NoteColors.getColor(list.get(position).getImportance())));
+            holder.itemView.setBackgroundColor(context.getResources()
                     .getColor(NoteColors.getColor(list.get(position).getImportance())));
         } catch (NullPointerException e){}
 
@@ -97,11 +115,13 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteLi
     static class NoteListViewHolder extends RecyclerView.ViewHolder{
 
         TextView itemTitle;
+        ImageView imagePreview;
 
         public NoteListViewHolder(View itemView) {
             super(itemView);
 
             itemTitle = (TextView) itemView.findViewById(R.id.item_title);
+            imagePreview = (ImageView) itemView.findViewById(R.id.list_preview);
         }
     }
 }

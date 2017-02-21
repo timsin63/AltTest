@@ -16,11 +16,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.timofey.myapplication.database.Note;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,8 +35,7 @@ import java.io.IOException;
 
 public class NoteInfoDialog extends DialogFragment {
 
-
-
+    public static final String IMAGE_TAG = "IMAGE_TO_FULLSCREEN";
     public static final String TAG = "NOTE_INFO_DIALOG";
     Note note;
 
@@ -50,6 +51,7 @@ public class NoteInfoDialog extends DialogFragment {
         ImageButton btnEdit = (ImageButton) view.findViewById(R.id.btn_edit);
         ImageButton btnDelete = (ImageButton) view.findViewById(R.id.btn_delete);
         ImageButton btnExport = (ImageButton) view.findViewById(R.id.btn_export);
+        ImageView dialogPreview = (ImageView) view.findViewById(R.id.dialog_preview);
 
         note = (Note) getArguments().getSerializable(Note.TAG);
 
@@ -86,6 +88,23 @@ public class NoteInfoDialog extends DialogFragment {
             header.setBackgroundColor(getResources().getColor(NoteColors.getHeaderColor(note.getImportance())));
         } catch (NullPointerException e){
 
+        }
+
+        if (note.getPhotoPath() != null){
+            Picasso.with(getActivity().getApplicationContext()).load(new File(note.getPhotoPath()))
+                    .resize(200, 200)
+                    .into(dialogPreview);
+
+            dialogPreview.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DialogFragment imageShowDialog = new ImageShowDialog();
+                    Bundle args = new Bundle();
+                    args.putString(IMAGE_TAG, note.getPhotoPath());
+                    imageShowDialog.setArguments(args);
+                    imageShowDialog.show(getActivity().getFragmentManager(), ImageShowDialog.TAG);
+                }
+            });
         }
 
         return view;
