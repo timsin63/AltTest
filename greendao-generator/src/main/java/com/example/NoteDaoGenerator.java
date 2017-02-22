@@ -22,6 +22,9 @@ public class NoteDaoGenerator {
         item.addStringProperty("content");
         item.addIntProperty("importance");
         item.addStringProperty("photoPath");
+        item.addStringProperty("placeName");
+        item.addDoubleProperty("latitude");
+        item.addDoubleProperty("longitude");
 
         try {
             new DaoGenerator().generateAll(schema, "./app/src/main/java");

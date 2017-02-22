@@ -27,6 +27,9 @@ public class NoteDao extends AbstractDao<Note, Long> {
         public final static Property Content = new Property(2, String.class, "content", false, "CONTENT");
         public final static Property Importance = new Property(3, Integer.class, "importance", false, "IMPORTANCE");
         public final static Property PhotoPath = new Property(4, String.class, "photoPath", false, "PHOTO_PATH");
+        public final static Property PlaceName = new Property(5, String.class, "placeName", false, "PLACE_NAME");
+        public final static Property Latitude = new Property(6, Double.class, "latitude", false, "LATITUDE");
+        public final static Property Longitude = new Property(7, Double.class, "longitude", false, "LONGITUDE");
     }
 
 
@@ -46,7 +49,10 @@ public class NoteDao extends AbstractDao<Note, Long> {
                 "\"TITLE\" TEXT," + // 1: title
                 "\"CONTENT\" TEXT," + // 2: content
                 "\"IMPORTANCE\" INTEGER," + // 3: importance
-                "\"PHOTO_PATH\" TEXT);"); // 4: photoPath
+                "\"PHOTO_PATH\" TEXT," + // 4: photoPath
+                "\"PLACE_NAME\" TEXT," + // 5: placeName
+                "\"LATITUDE\" REAL," + // 6: latitude
+                "\"LONGITUDE\" REAL);"); // 7: longitude
     }
 
     /** Drops the underlying database table. */
@@ -83,6 +89,21 @@ public class NoteDao extends AbstractDao<Note, Long> {
         if (photoPath != null) {
             stmt.bindString(5, photoPath);
         }
+ 
+        String placeName = entity.getPlaceName();
+        if (placeName != null) {
+            stmt.bindString(6, placeName);
+        }
+ 
+        Double latitude = entity.getLatitude();
+        if (latitude != null) {
+            stmt.bindDouble(7, latitude);
+        }
+ 
+        Double longitude = entity.getLongitude();
+        if (longitude != null) {
+            stmt.bindDouble(8, longitude);
+        }
     }
 
     @Override
@@ -113,6 +134,21 @@ public class NoteDao extends AbstractDao<Note, Long> {
         if (photoPath != null) {
             stmt.bindString(5, photoPath);
         }
+ 
+        String placeName = entity.getPlaceName();
+        if (placeName != null) {
+            stmt.bindString(6, placeName);
+        }
+ 
+        Double latitude = entity.getLatitude();
+        if (latitude != null) {
+            stmt.bindDouble(7, latitude);
+        }
+ 
+        Double longitude = entity.getLongitude();
+        if (longitude != null) {
+            stmt.bindDouble(8, longitude);
+        }
     }
 
     @Override
@@ -127,7 +163,10 @@ public class NoteDao extends AbstractDao<Note, Long> {
             cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // title
             cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // content
             cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3), // importance
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4) // photoPath
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // photoPath
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // placeName
+            cursor.isNull(offset + 6) ? null : cursor.getDouble(offset + 6), // latitude
+            cursor.isNull(offset + 7) ? null : cursor.getDouble(offset + 7) // longitude
         );
         return entity;
     }
@@ -139,6 +178,9 @@ public class NoteDao extends AbstractDao<Note, Long> {
         entity.setContent(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
         entity.setImportance(cursor.isNull(offset + 3) ? null : cursor.getInt(offset + 3));
         entity.setPhotoPath(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setPlaceName(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setLatitude(cursor.isNull(offset + 6) ? null : cursor.getDouble(offset + 6));
+        entity.setLongitude(cursor.isNull(offset + 7) ? null : cursor.getDouble(offset + 7));
      }
     
     @Override

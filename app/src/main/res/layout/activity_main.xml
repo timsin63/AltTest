@@ -17,11 +17,21 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:popupTheme="@style/Theme.AppCompat" />
+            app:popupTheme="@style/Theme.AppCompat">
+
+        <ImageButton
+            android:id="@+id/map_btn"
+            android:layout_width="@dimen/control_icons_size"
+            android:layout_height="@dimen/control_icons_size"
+            android:layout_gravity="right"
+            android:padding="@dimen/activity_vertical_margin"
+            android:background="@drawable/map"/>
+
+        </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
 
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+    <fragment        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/fragment"

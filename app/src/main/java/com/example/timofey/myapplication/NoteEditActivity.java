@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -16,10 +17,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.timofey.myapplication.database.Note;
 import com.example.timofey.myapplication.database.NoteDao;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.internal.PlaceEntity;
+import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.greenrobot.greendao.DaoException;
 
@@ -30,6 +39,7 @@ import java.io.InputStream;
 public class NoteEditActivity extends AppCompatActivity {
 
     private static final int IMAGE_PICK_REQUEST_CODE = 4772;
+    private static final int PLACE_PICK_REQUEST_CODE = 7772;
     public static final String TAG = "NOTE_EDIT_ACTIVITY";
 
     private NoteDao noteDao;
@@ -39,6 +49,9 @@ public class NoteEditActivity extends AppCompatActivity {
     Note note;
     private ImageView notePhoto;
     private String photoPath;
+    private TextView placeNameView;
+    String placeName;
+    LatLng placeLatLng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +67,8 @@ public class NoteEditActivity extends AppCompatActivity {
         spinner = (Spinner) findViewById(R.id.importance_spinner);
         notePhoto = (ImageView) findViewById(R.id.photo_preview_edit);
         Button deleteImgBtn = (Button) findViewById(R.id.delete_img_btn);
+        Button placeBtn = (Button) findViewById(R.id.place_btn);
+        placeNameView = (TextView) findViewById(R.id.place_name);
 
         noteDao = NoteListFragment.noteDao;
 
@@ -108,6 +123,26 @@ public class NoteEditActivity extends AppCompatActivity {
             }
         });
 
+        try {
+            placeName = note.getPlaceName();
+            placeLatLng = new LatLng(note.getLatitude(), note.getLongitude());
+        } catch (NullPointerException e){}
+
+        if (placeName != null){
+            placeNameView.setText(placeName);
+        }
+
+        placeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+                try {
+                    startActivityForResult(builder.build(NoteEditActivity.this), PLACE_PICK_REQUEST_CODE);
+                } catch (Exception e){
+                    Log.e(TAG, e.getLocalizedMessage());
+                }
+            }
+        });
     }
 
 
@@ -138,6 +173,19 @@ public class NoteEditActivity extends AppCompatActivity {
         newNote.setContent(content);
         newNote.setImportance(spinner.getSelectedItemPosition());
         newNote.setPhotoPath(photoPath);
+
+        if (placeName != null){
+            newNote.setPlaceName(placeName);
+            newNote.setLatitude(placeLatLng.latitude);
+            newNote.setLongitude(placeLatLng.longitude);
+        } else {
+            try {
+                Location location = new LocationGetter(getApplicationContext()).getCurrentLocation();
+                note.setLatitude(location.getLatitude());
+                note.setLongitude(location.getLongitude());
+            } catch (Exception e) {
+            }
+        }
         noteDao.insert(newNote);
 
         finish();
@@ -157,6 +205,18 @@ public class NoteEditActivity extends AppCompatActivity {
         note.setImportance(spinner.getSelectedItemPosition());
         note.setPhotoPath(photoPath);
 
+        if (placeName != null){
+            note.setPlaceName(placeName);
+            note.setLatitude(placeLatLng.latitude);
+            note.setLongitude(placeLatLng.longitude);
+        } else {
+            try {
+                Location location = new LocationGetter(getApplicationContext()).getCurrentLocation();
+                note.setLatitude(location.getLatitude());
+                note.setLongitude(location.getLongitude());
+            } catch (Exception e) {
+            }
+        }
         try {
             noteDao.update(note);
         } catch (DaoException e){
@@ -180,6 +240,14 @@ public class NoteEditActivity extends AppCompatActivity {
                     Log.e(TAG, e.getLocalizedMessage());
                 }
                 break;
+            case PLACE_PICK_REQUEST_CODE:
+                try {
+                    Place place = PlacePicker.getPlace(data, this);
+                    placeName = place.getName().toString();
+                    placeLatLng = place.getLatLng();
+                    placeNameView.setText(placeName);
+                } catch (NullPointerException e){}
+                break;
         }
     }
 
@@ -197,4 +265,5 @@ public class NoteEditActivity extends AppCompatActivity {
             }
         }
     }
+
 }

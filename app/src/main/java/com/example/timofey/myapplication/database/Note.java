@@ -20,6 +20,9 @@ public class Note implements Serializable{
     private String content;
     private Integer importance;
     private String photoPath;
+    private String placeName;
+    private Double latitude;
+    private Double longitude;
 
     @Generated
     public Note() {
@@ -30,12 +33,15 @@ public class Note implements Serializable{
     }
 
     @Generated
-    public Note(Long id, String title, String content, Integer importance, String photoPath) {
+    public Note(Long id, String title, String content, Integer importance, String photoPath, String placeName, Double latitude, Double longitude) {
         this.id = id;
         this.title = title;
         this.content = content;
         this.importance = importance;
         this.photoPath = photoPath;
+        this.placeName = placeName;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public Long getId() {
@@ -76,6 +82,30 @@ public class Note implements Serializable{
 
     public void setPhotoPath(String photoPath) {
         this.photoPath = photoPath;
+    }
+
+    public String getPlaceName() {
+        return placeName;
+    }
+
+    public void setPlaceName(String placeName) {
+        this.placeName = placeName;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(Double latitude) {
+        this.latitude = latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(Double longitude) {
+        this.longitude = longitude;
     }
 
 }
