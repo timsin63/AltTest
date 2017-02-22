@@ -52,6 +52,7 @@ public class NoteInfoDialog extends DialogFragment {
         ImageButton btnDelete = (ImageButton) view.findViewById(R.id.btn_delete);
         ImageButton btnExport = (ImageButton) view.findViewById(R.id.btn_export);
         ImageView dialogPreview = (ImageView) view.findViewById(R.id.dialog_preview);
+        ImageButton btnShare = (ImageButton) view.findViewById(R.id.btn_share);
 
         note = (Note) getArguments().getSerializable(Note.TAG);
 
@@ -106,6 +107,17 @@ public class NoteInfoDialog extends DialogFragment {
                 }
             });
         }
+
+        btnShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType("*/*");
+                shareIntent.putExtra(Intent.EXTRA_TITLE, note.getTitle());
+                shareIntent.putExtra(Intent.EXTRA_TEXT, note.getContent());
+                startActivity(Intent.createChooser(shareIntent, getString(R.string.app_name)));
+            }
+        });
 
         return view;
     }
