@@ -3,6 +3,10 @@ package com.example.timofey.myapplication;
 
 import android.app.Activity;
 import android.app.DialogFragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -34,15 +38,17 @@ import static com.example.timofey.myapplication.NoteListAdapter.EXTRA_POSITION;
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     public static final String TAG = "MAPS_FRAGMENT";
+    public static final String IS_MAP_OPENED = "MAPS_FRAGMENT_IS_OPENED";
+    public static final String INTENT_FILTER = "MAPS_FRAGMENT_INTENT_FILTER";
 
     private View view;
     private GoogleMap googleMap;
     ArrayList<Note> list;
     ImageButton mapButton;
     SupportMapFragment supportMapFragment;
+    NoteDao noteDao;
 
     public MapFragment() {
-
     }
 
 
@@ -71,9 +77,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         this.googleMap = googleMap;
 
         DaoSession daoSession = ((App) getActivity().getApplicationContext()).getDaoSession();
-        NoteDao noteDao = daoSession.getNoteDao();
+        noteDao = daoSession.getNoteDao();
 
-        list = (ArrayList<Note>) noteDao.loadAll();
+        this.googleMap.setMyLocationEnabled(true);
+
+        setUpMarkers();
 
         try {
             Location currentLocation = new LocationGetter(getContext()).getCurrentLocation();
@@ -82,7 +90,21 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             this.googleMap.animateCamera(cameraUpdate);
         } catch (Exception e){}
 
-        this.googleMap.setMyLocationEnabled(true);
+
+        getActivity().registerReceiver(itemChangedReceiver, new IntentFilter(INTENT_FILTER));
+    }
+
+    BroadcastReceiver itemChangedReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            googleMap.clear();
+            setUpMarkers();
+        }
+    };
+
+
+    private void setUpMarkers(){
+        list = (ArrayList<Note>) noteDao.loadAll();
 
         for (Note note : list){
             try {
@@ -103,6 +125,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                         Bundle args = new Bundle();
                         args.putSerializable(Note.TAG, list.get(i));
                         args.putInt(EXTRA_POSITION, i);
+                        args.putBoolean(IS_MAP_OPENED, true);
                         infoDialog.setArguments(args);
                         infoDialog.show(((Activity) getActivity()).getFragmentManager(), NoteInfoDialog.TAG);
                         return;
@@ -112,10 +135,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         });
     }
 
-
     @Override
     public void onStop() {
         super.onStop();
         mapButton.setVisibility(View.VISIBLE);
+        MainActivity.isMapOpened = false;
     }
 }

@@ -64,6 +64,8 @@ public class NoteInfoDialog extends DialogFragment {
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), NoteEditActivity.class);
                 intent.putExtra(Note.TAG, note);
+                boolean isMapOpened = getArguments().getBoolean(MapFragment.IS_MAP_OPENED, false);
+                intent.putExtra(MapFragment.IS_MAP_OPENED, isMapOpened);
                 dismiss();
                 startActivity(intent);
             }
@@ -134,8 +136,15 @@ public class NoteInfoDialog extends DialogFragment {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     NoteListFragment.noteDao.delete(note);
-                    Intent intent = new Intent(NoteListAdapter.INTENT_FILTER);
-                    intent.putExtra(NoteListAdapter.EXTRA_POSITION, getArguments().getInt(NoteListAdapter.EXTRA_POSITION));
+                    boolean isMapOpened = getArguments().getBoolean(MapFragment.IS_MAP_OPENED, false);
+
+                    Intent intent = null;
+                    if (isMapOpened){
+                        intent = new Intent(MapFragment.INTENT_FILTER);
+                    } else {
+                        intent = new Intent(NoteListAdapter.INTENT_FILTER);
+                        intent.putExtra(NoteListAdapter.EXTRA_POSITION, getArguments().getInt(NoteListAdapter.EXTRA_POSITION));
+                    }
                     getActivity().sendBroadcast(intent);
                     dismiss();
                 }

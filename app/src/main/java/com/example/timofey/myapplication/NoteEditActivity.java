@@ -52,6 +52,7 @@ public class NoteEditActivity extends AppCompatActivity {
     private TextView placeNameView;
     String placeName;
     LatLng placeLatLng;
+    boolean isMapOpened;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +72,7 @@ public class NoteEditActivity extends AppCompatActivity {
         placeNameView = (TextView) findViewById(R.id.place_name);
 
         noteDao = NoteListFragment.noteDao;
+        isMapOpened = getIntent().getBooleanExtra(MapFragment.IS_MAP_OPENED, false);
 
         if (note == null){
             btnOk.setText(R.string.add);
@@ -181,12 +183,16 @@ public class NoteEditActivity extends AppCompatActivity {
         } else {
             try {
                 Location location = new LocationGetter(getApplicationContext()).getCurrentLocation();
-                note.setLatitude(location.getLatitude());
-                note.setLongitude(location.getLongitude());
+                newNote.setLatitude(location.getLatitude());
+                newNote.setLongitude(location.getLongitude());
             } catch (Exception e) {
+                Log.e(TAG, e.getLocalizedMessage());
             }
         }
         noteDao.insert(newNote);
+        if (isMapOpened){
+            sendBroadcast(new Intent(MapFragment.INTENT_FILTER));
+        }
 
         finish();
     }
@@ -221,6 +227,10 @@ public class NoteEditActivity extends AppCompatActivity {
             noteDao.update(note);
         } catch (DaoException e){
             noteDao.insert(note);
+        }
+
+        if (isMapOpened){
+            sendBroadcast(new Intent(MapFragment.INTENT_FILTER));
         }
     }
 

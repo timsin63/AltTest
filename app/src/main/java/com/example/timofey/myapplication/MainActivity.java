@@ -25,13 +25,12 @@ public class MainActivity extends AppCompatActivity {
     public static final String[] EXTERNAL_PERMISSIONS = {"android.permission.READ_EXTERNAL_STORAGE", "android.permission.WRITE_EXTERNAL_STORAGE"};
     public static final int READ_WRITE_EXTERNAL_REQUEST_CODE = 9372;
     public static final int LOCATION_REQUEST_CODE = 572;
-
+    public static boolean isMapOpened = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         checkPermissions();
 
@@ -40,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), NoteEditActivity.class);
+                intent.putExtra(MapFragment.IS_MAP_OPENED, isMapOpened);
                 startActivity(intent);
             }
         });
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                         .addToBackStack(null)
                         .replace(R.id.fragment, mapFragment, MapFragment.TAG);
                 fragmentTransaction.commit();
-
+                isMapOpened = true;
             }
         });
     }
