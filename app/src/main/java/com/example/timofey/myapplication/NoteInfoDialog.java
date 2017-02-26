@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.design.widget.Snackbar;
@@ -28,6 +29,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URI;
 
 /**
  * Created by timofey on 19.02.2017.
@@ -115,8 +117,14 @@ public class NoteInfoDialog extends DialogFragment {
             public void onClick(View v) {
                 Intent shareIntent = new Intent(Intent.ACTION_SEND);
                 shareIntent.setType("*/*");
-                shareIntent.putExtra(Intent.EXTRA_TITLE, note.getTitle());
-                shareIntent.putExtra(Intent.EXTRA_TEXT, note.getContent());
+                if (note.getContent() != null) {
+                    shareIntent.putExtra(Intent.EXTRA_TEXT, note.getTitle() + "\n\n" +
+                            note.getContent());
+                }
+                if (note.getPhotoPath() != null) {
+                    shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(note.getPhotoPath())));
+                }
+
                 startActivity(Intent.createChooser(shareIntent, getString(R.string.app_name)));
             }
         });
