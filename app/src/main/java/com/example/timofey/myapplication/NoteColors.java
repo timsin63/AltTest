@@ -10,7 +10,6 @@ import java.util.Map;
 
 public class NoteColors {
 
-
     public static Integer getColor(int importance){
 
         Map<Integer, Integer> colors = new HashMap<>();
@@ -32,5 +31,4 @@ public class NoteColors {
 
         return colors.get(importance);
     }
-
 }

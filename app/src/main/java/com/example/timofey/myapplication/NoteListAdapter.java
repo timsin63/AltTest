@@ -69,9 +69,7 @@ public class NoteListAdapter extends RecyclerView.Adapter<NoteListAdapter.NoteLi
             Picasso.with(context).load(new File(list.get(position).getPhotoPath()))
                     .resize(120, 120)
                     .into(holder.imagePreview);
-        } catch (Exception e){
-            Log.e(TAG, e.getLocalizedMessage());
-        }
+        } catch (Exception e){}
 
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {

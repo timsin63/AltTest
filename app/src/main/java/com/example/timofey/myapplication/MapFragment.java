@@ -10,10 +10,12 @@ import android.content.IntentFilter;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.example.timofey.myapplication.database.DaoSession;
 import com.example.timofey.myapplication.database.Note;
@@ -65,7 +67,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mapButton.setVisibility(View.INVISIBLE);
 
         supportMapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
-
         supportMapFragment.getMapAsync(this);
 
         return view;
@@ -88,8 +89,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 13);
             this.googleMap.animateCamera(cameraUpdate);
-        } catch (Exception e){}
-
+        } catch (Exception e){
+            Toast.makeText(getContext(), getString(R.string.location_disabled), Toast.LENGTH_SHORT).show();
+            Log.d(TAG, e.getLocalizedMessage());
+        }
 
         getActivity().registerReceiver(itemChangedReceiver, new IntentFilter(INTENT_FILTER));
     }

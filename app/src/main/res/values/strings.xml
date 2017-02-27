@@ -27,4 +27,5 @@
     <string name="delete_photo">Delete photo</string>
     <string name="place">Place:</string>
     <string name="choose">Choose</string>
+    <string name="location_disabled">Current location unavailable. Please, turn on gps and try again</string>
 </resources>

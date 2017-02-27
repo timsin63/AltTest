@@ -53,7 +53,7 @@ public class NoteInfoDialog extends DialogFragment {
         ImageButton btnEdit = (ImageButton) view.findViewById(R.id.btn_edit);
         ImageButton btnDelete = (ImageButton) view.findViewById(R.id.btn_delete);
         ImageButton btnExport = (ImageButton) view.findViewById(R.id.btn_export);
-        ImageView dialogPreview = (ImageView) view.findViewById(R.id.dialog_preview);
+        ImageView dialogPhotoPreview = (ImageView) view.findViewById(R.id.dialog_preview);
         ImageButton btnShare = (ImageButton) view.findViewById(R.id.btn_share);
 
         note = (Note) getArguments().getSerializable(Note.TAG);
@@ -87,20 +87,17 @@ public class NoteInfoDialog extends DialogFragment {
         });
 
         LinearLayout header = (LinearLayout) view.findViewById(R.id.dialog_header);
-
         try {
             view.setBackgroundColor(getResources().getColor(NoteColors.getColor(note.getImportance())));
             header.setBackgroundColor(getResources().getColor(NoteColors.getHeaderColor(note.getImportance())));
-        } catch (NullPointerException e){
-
-        }
+        } catch (NullPointerException e){}
 
         if (note.getPhotoPath() != null){
             Picasso.with(getActivity().getApplicationContext()).load(new File(note.getPhotoPath()))
                     .resize(200, 200)
-                    .into(dialogPreview);
+                    .into(dialogPhotoPreview);
 
-            dialogPreview.setOnClickListener(new View.OnClickListener() {
+            dialogPhotoPreview.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     DialogFragment imageShowDialog = new ImageShowDialog();
